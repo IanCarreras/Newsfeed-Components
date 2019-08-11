@@ -112,3 +112,46 @@ const data = [
   Step 5: Add a new article to the array. Make sure it is in the same format as the others. Refresh the page to see the new artible
 
 */
+
+const createArticles = (obj) => {
+  let articleDiv = document.createElement('div')
+  articleDiv.classList.add('article')
+
+  let h2 = document.createElement('h2')
+  h2.innerText = obj.title
+
+  let createPTags = (obj) => { 
+    let infoArray = [obj.date, obj.firstParagraph, obj.secondParagraph, obj.thirdParagraph]
+    let typeArray = ['date', 'firstParagraph', 'secondParagraph', 'thirdParagraph']
+    let tags = [] 
+    infoArray.forEach((tagInfo, i) => {
+      let p = document.createElement('p')
+      p.classList.add(typeArray[i])
+      p.innerText = tagInfo
+      tags.push(p)
+    })
+    return tags
+  }
+  let pTags = createPTags(obj)
+  
+  let span = document.createElement('span')
+  span.classList.add('expandButton')
+  span.innerText = 'Read Article'
+
+  span.addEventListener('click', (event) => {
+    if(Object.values(articleDiv.classList).indexOf('article-open') >= 0){
+      return articleDiv.classList.remove('article-open')
+    } else return articleDiv.classList.add('article-open')
+  })
+  
+  articleDiv.appendChild(h2)
+  pTags.forEach(tag => articleDiv.appendChild(tag))
+  articleDiv.appendChild(span)
+
+  return articleDiv
+}
+
+let articles = data.map(article => createArticles(article))
+
+let articlesDiv = document.querySelector('.articles')
+articles.forEach(article => articlesDiv.appendChild(article))
