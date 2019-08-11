@@ -122,7 +122,7 @@ const createArticles = (obj) => {
 
   let createPTags = (obj) => { 
     let infoArray = [obj.date, obj.firstParagraph, obj.secondParagraph, obj.thirdParagraph]
-    let typeArray = ['date', 'firstParagraph', 'secondParagraph', 'thirdParagraph']
+    let typeArray = ['date', 'paragraph', 'paragraph', 'paragraph']
     let tags = [] 
     infoArray.forEach((tagInfo, i) => {
       let p = document.createElement('p')
@@ -132,16 +132,35 @@ const createArticles = (obj) => {
     })
     return tags
   }
-  let pTags = createPTags(obj)
+  let pTags = createPTags(obj) 
   
   let span = document.createElement('span')
   span.classList.add('expandButton')
   span.innerText = 'Read Article'
+  span.style.color = 'black'
 
   span.addEventListener('click', (event) => {
     if(Object.values(articleDiv.classList).indexOf('article-open') >= 0){
+      articleDiv.style.overflowY = 'hidden'
+      pTags.forEach(tag => tag.style.display = 'none')
+      pTags[0].style.display = ''
+      Object.assign(span.style, {
+        left: '50%',
+        top: '',
+        
+      })
+      span.innerText = 'Read Article'
       return articleDiv.classList.remove('article-open')
-    } else return articleDiv.classList.add('article-open')
+    } else {
+      pTags.forEach(tag => tag.style.display = '')
+      articleDiv.style.overflowY = 'auto'
+      Object.assign(span.style, {
+        left: '95%',
+        top: '5%'
+      })
+      span.innerText = 'X Close'
+      return articleDiv.classList.add('article-open')
+    }
   })
   
   articleDiv.appendChild(h2)
