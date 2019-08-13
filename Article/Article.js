@@ -140,6 +140,7 @@ const data = [
   Step 5: Add a new article to the array. Make sure it is in the same format as the others. Refresh the page to see the new artible
 
 */
+sessionStorage.setItem('data', JSON.stringify(data))
 
 const createArticles = (obj) => {
   let articleDiv = document.createElement('div')
@@ -197,7 +198,87 @@ const createArticles = (obj) => {
   return articleDiv
 }
 
-let articles = data.map(article => createArticles(article))
+// let articleData = JSON.parse(sessionStorage.getItem('data'))
+// let articles = articleData.map(article => createArticles(article))
+
+
+// let articlesDiv = document.querySelector('.articles')
+// window.onload = () => {
+//   console.log(articleData)
+//   console.log(articles)
+//   articles.forEach(article => articlesDiv.appendChild(article))
+// }
+
+//for element for writing new articles
+
+const inputForm = () => {
+  let formDiv = document.createElement('form')
+  let title = document.createElement('input')
+  let date = document.createElement('input')
+  let text = document.createElement('textarea')
+  let submit = document.createElement('input')
+  let formElements = [title, date, text, submit]
+
+  submit.setAttribute('type', 'submit')
+  submit.setAttribute('value', 'submit')
+  
+  formElements.forEach(item => formDiv.appendChild(item))
+
+  Object.assign(formDiv.style, {
+    display: 'flex',
+    flexDirection: 'column', 
+    margin: '0 auto',
+    width: '80%',
+  })
+
+  Object.assign(title.style, {
+    flexGrow: '1',
+    width: '50%',
+    height: '2rem',
+  })
+  title.setAttribute('placeholder', 'title')
+
+  Object.assign(date.style, {
+    flexGrow: '1',
+    width: '50%',
+    height: '2rem'
+  })
+  date.setAttribute('placeholder', 'date')
+
+  Object.assign(text.style, {
+    flexGrow: '2',
+    height: '20rem'
+  })
+  text.setAttribute('placeholder', 'write......')
+
+  Object.assign(submit.style, {
+    width: '20%',
+  })
+
+  submit.addEventListener('click', (event) => {
+    event.preventDefault()
+    data.push({
+      'title': title.value,
+      'date': date.value,
+      'firstParagraph': text.value,
+      'secondParagraph': text.value,
+      'thirdParagraph': text.value
+    })
+    sessionStorage.setItem('data', JSON.stringify(data))
+  })
+  return formDiv
+}
+
+let articleData = JSON.parse(sessionStorage.getItem('data'))
+let articles = articleData.map(article => createArticles(article))
+
 
 let articlesDiv = document.querySelector('.articles')
-articles.forEach(article => articlesDiv.appendChild(article))
+window.onload = () => {
+  console.log(articleData)
+  console.log(articles)
+  articles.forEach(article => articlesDiv.appendChild(article))
+}
+
+let form = inputForm()
+document.body.appendChild(form)

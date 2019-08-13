@@ -71,6 +71,18 @@ const createMenu = (arr) => {
 }
 
 let header = document.querySelector('.header')
-
 let menu = createMenu(menuItems)
+let addButton = document.createElement('img')
+addButton.setAttribute('src', './assets/add.png')
+Object.assign(addButton.style, {
+  height: '2rem',
+  position: 'absolute',
+  right: '2%',
+  cursor: 'pointer'
+})
+addButton.addEventListener('click', (event) => {
+  return console.log('open form element')
+})
+
 header.prepend(menu)
+header.append(addButton)
