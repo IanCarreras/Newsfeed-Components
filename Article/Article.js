@@ -198,20 +198,8 @@ const createArticles = (obj) => {
   return articleDiv
 }
 
-// let articleData = JSON.parse(sessionStorage.getItem('data'))
-// let articles = articleData.map(article => createArticles(article))
 
-
-// let articlesDiv = document.querySelector('.articles')
-// window.onload = () => {
-//   console.log(articleData)
-//   console.log(articles)
-//   articles.forEach(article => articlesDiv.appendChild(article))
-// }
-
-//for element for writing new articles
-
-const inputForm = () => {
+const inputForm = (articleData, articles) => {
   let formDiv = document.createElement('form')
   let title = document.createElement('input')
   let date = document.createElement('input')
@@ -264,7 +252,14 @@ const inputForm = () => {
       'secondParagraph': text.value,
       'thirdParagraph': text.value
     })
+    console.log(typeof articlesDiv)
+    while(articlesDiv.hasChildNodes()) {
+      articlesDiv.removeChild(articlesDiv.firstChild)
+    }
     sessionStorage.setItem('data', JSON.stringify(data))
+    let articleData = JSON.parse(sessionStorage.getItem('data'))
+    let articles = articleData.map(article => createArticles(article))
+    articles.forEach(article => articlesDiv.appendChild(article))
   })
   return formDiv
 }
