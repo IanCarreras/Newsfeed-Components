@@ -200,47 +200,69 @@ const createArticles = (obj) => {
 
 
 const inputForm = (articleData, articles) => {
+  let formCover = document.createElement('div')
   let formDiv = document.createElement('form')
   let title = document.createElement('input')
   let date = document.createElement('input')
   let text = document.createElement('textarea')
   let submit = document.createElement('input')
-  let formElements = [title, date, text, submit]
+  let close = document.createElement('span')
+  let formElements = [close, title, date, text, submit]
 
   submit.setAttribute('type', 'submit')
   submit.setAttribute('value', 'submit')
   
   formElements.forEach(item => formDiv.appendChild(item))
+  formCover.appendChild(formDiv)
+  formCover.classList.add('form-cover')
+
+  Object.assign(formCover.style, {
+    display: 'none',
+    position: 'fixed',
+    top: '0',
+    background: 'rgba(0, 0, 0, 0.7)',
+    height: '100%',
+    width: '100%'
+  })
 
   Object.assign(formDiv.style, {
     display: 'flex',
     flexDirection: 'column', 
-    margin: '0 auto',
+    backgroundColor: 'darkgray',
+    position: 'fixed',
+    top: '15%',
+    left: '8%',
     width: '80%',
+    border: '2px solid black',
+    borderRadius: '1rem',
+    padding: '1.5rem',
   })
 
   Object.assign(title.style, {
-    flexGrow: '1',
-    width: '50%',
     height: '2rem',
+    borderRadius: '1rem 1rem 0 0',
+    border: '1px solid black',
+
   })
   title.setAttribute('placeholder', 'title')
 
   Object.assign(date.style, {
-    flexGrow: '1',
-    width: '50%',
-    height: '2rem'
+    height: '2rem',
+    border: '1px solid black',
   })
   date.setAttribute('placeholder', 'date')
 
   Object.assign(text.style, {
-    flexGrow: '2',
-    height: '20rem'
+    height: '20rem',
+    borderRadius: '0 0 1rem 1rem',
+    border: '1px solid black',
   })
   text.setAttribute('placeholder', 'write......')
 
   Object.assign(submit.style, {
     width: '20%',
+    margin: '.5rem 0 0 1rem',
+    cursor: 'pointer'
   })
 
   submit.addEventListener('click', (event) => {
@@ -252,7 +274,7 @@ const inputForm = (articleData, articles) => {
       'secondParagraph': text.value,
       'thirdParagraph': text.value
     })
-    console.log(typeof articlesDiv)
+
     while(articlesDiv.hasChildNodes()) {
       articlesDiv.removeChild(articlesDiv.firstChild)
     }
@@ -260,8 +282,19 @@ const inputForm = (articleData, articles) => {
     let articleData = JSON.parse(sessionStorage.getItem('data'))
     let articles = articleData.map(article => createArticles(article))
     articles.forEach(article => articlesDiv.appendChild(article))
+    formCover.style.display = 'none'
   })
-  return formDiv
+
+  Object.assign(close.style, {
+    cursor: 'pointer',
+    marginLeft: '90%',
+    marginBottom: '1rem'
+  })
+  close.innerText = 'X Close'
+  close.addEventListener('click', (event) => {
+    return formCover.style.display = 'none'
+  })
+  return formCover
 }
 
 let articleData = JSON.parse(sessionStorage.getItem('data'))
@@ -270,8 +303,6 @@ let articles = articleData.map(article => createArticles(article))
 
 let articlesDiv = document.querySelector('.articles')
 window.onload = () => {
-  console.log(articleData)
-  console.log(articles)
   articles.forEach(article => articlesDiv.appendChild(article))
 }
 

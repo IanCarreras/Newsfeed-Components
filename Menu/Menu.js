@@ -81,7 +81,8 @@ Object.assign(addButton.style, {
   cursor: 'pointer'
 })
 addButton.addEventListener('click', (event) => {
-  return console.log('open form element')
+  let formCover = document.querySelector('.form-cover')
+  return formCover.style.display = 'flex'
 })
 
 header.prepend(menu)
