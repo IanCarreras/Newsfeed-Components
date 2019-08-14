@@ -277,8 +277,6 @@ const inputForm = (articleData, articles) => {
       'title': title.value,
       'date': date.value,
       'firstParagraph': text.value,
-      // 'secondParagraph': text.value,
-      // 'thirdParagraph': text.value
     })
 
     while(articlesDiv.hasChildNodes()) {
