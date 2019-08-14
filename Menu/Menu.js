@@ -72,6 +72,7 @@ const createMenu = (arr) => {
 
 let header = document.querySelector('.header')
 let menu = createMenu(menuItems)
+
 let addButton = document.createElement('img')
 addButton.setAttribute('src', './assets/add.png')
 Object.assign(addButton.style, {
@@ -82,7 +83,14 @@ Object.assign(addButton.style, {
 })
 addButton.addEventListener('click', (event) => {
   let formCover = document.querySelector('.form-cover')
-  return formCover.style.display = 'flex'
+  let titleInput = document.querySelector('.title-input')
+  let dateInput = document.querySelector('.date-input')
+  let textInput = document.querySelector('.text-input')
+  formCover.style.display = 'flex'
+  titleInput.focus()
+  titleInput.value = ''
+  dateInput.value = ''
+  textInput.value = ''
 })
 
 header.prepend(menu)

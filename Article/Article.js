@@ -180,7 +180,10 @@ const createArticles = (obj) => {
       span.innerText = 'Read Article'
       return articleDiv.classList.remove('article-open')
     } else {
-      pTags.forEach(tag => tag.style.display = '')
+      pTags.forEach(tag => {
+        tag.style.display = ''
+        if(tag.innerText === 'undefined') tag.style.display = 'none'
+      })
       articleDiv.style.overflowY = 'auto'
       Object.assign(span.style, {
         left: '95%',
@@ -245,12 +248,14 @@ const inputForm = (articleData, articles) => {
 
   })
   title.setAttribute('placeholder', 'title')
+  title.classList.add('title-input')
 
   Object.assign(date.style, {
     height: '2rem',
     border: '1px solid black',
   })
   date.setAttribute('placeholder', 'date')
+  date.classList.add('date-input')
 
   Object.assign(text.style, {
     height: '20rem',
@@ -258,6 +263,7 @@ const inputForm = (articleData, articles) => {
     border: '1px solid black',
   })
   text.setAttribute('placeholder', 'write......')
+  text.classList.add('text-input')
 
   Object.assign(submit.style, {
     width: '20%',
@@ -271,8 +277,8 @@ const inputForm = (articleData, articles) => {
       'title': title.value,
       'date': date.value,
       'firstParagraph': text.value,
-      'secondParagraph': text.value,
-      'thirdParagraph': text.value
+      // 'secondParagraph': text.value,
+      // 'thirdParagraph': text.value
     })
 
     while(articlesDiv.hasChildNodes()) {
