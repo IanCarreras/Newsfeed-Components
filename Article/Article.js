@@ -140,6 +140,12 @@ const data = [
   Step 5: Add a new article to the array. Make sure it is in the same format as the others. Refresh the page to see the new artible
 
 */
+let dataId = 0
+let deleteButtonId = 0
+
+data.forEach(article => Object.assign(article, {
+  id: dataId++
+}))
 sessionStorage.setItem('data', JSON.stringify(data))
 
 const createArticles = (obj) => {
@@ -147,7 +153,7 @@ const createArticles = (obj) => {
   articleDiv.classList.add('article')
 
   let h2 = document.createElement('h2')
-  h2.innerText = obj.title
+  h2.innerText = obj.title  
 
   let createPTags = (obj) => { 
     let infoArray = [obj.date, obj.firstParagraph, obj.secondParagraph, obj.thirdParagraph]
@@ -161,12 +167,15 @@ const createArticles = (obj) => {
     })
     return tags
   }
-  let pTags = createPTags(obj) 
+  let pTags = createPTags(obj)
   
   let span = document.createElement('span')
   span.classList.add('expandButton')
   span.innerText = 'Read Article'
-  span.style.color = 'black'
+  Object.assign(span.style, {
+    color: 'black',
+    height: '1rem'
+  })
 
   span.addEventListener('click', (event) => {
     if(Object.values(articleDiv.classList).indexOf('article-open') >= 0){
@@ -186,15 +195,41 @@ const createArticles = (obj) => {
       })
       articleDiv.style.overflowY = 'auto'
       Object.assign(span.style, {
-        left: '95%',
+        left: '92%',
         top: '5%'
       })
       span.innerText = 'X Close'
+
+      Object.assign(deleteButton.style, {
+      })
       return articleDiv.classList.add('article-open')
     }
   })
   
+  let deleteButton = document.createElement('span')
+  deleteButton.innerText = 'DELETE'
+  deleteButton.setAttribute('id', `${deleteButtonId}`)
+  deleteButton.classList.add('delete')
+  deleteButtonId++
+
+  Object.assign(deleteButton.style, {
+    color: 'red',
+    position: 'absolute',
+    left: '89%',
+    cursor: 'pointer'
+  })
+
+  deleteButton.addEventListener('click', (event) => {
+    console.log(event.target.id)
+    let newData = JSON.parse(sessionStorage.getItem('data'))
+    let position = event.target.id
+    newData.splice(position, 1)
+    sessionStorage.setItem('data', JSON.stringify(newData))
+    reWrite(newData)
+  })
+
   articleDiv.appendChild(h2)
+  articleDiv.appendChild(deleteButton)
   pTags.forEach(tag => articleDiv.appendChild(tag))
   articleDiv.appendChild(span)
 
@@ -202,7 +237,7 @@ const createArticles = (obj) => {
 }
 
 
-const inputForm = (articleData, articles) => {
+const inputForm = () => {
   let formCover = document.createElement('div')
   let formDiv = document.createElement('form')
   let title = document.createElement('input')
@@ -272,8 +307,10 @@ const inputForm = (articleData, articles) => {
   })
 
   submit.addEventListener('click', (event) => {
+    let newArticleId = data.length
     event.preventDefault()
     data.push({
+      'id': newArticleId++,
       'title': title.value,
       'date': date.value,
       'firstParagraph': text.value,
@@ -282,11 +319,13 @@ const inputForm = (articleData, articles) => {
     while(articlesDiv.hasChildNodes()) {
       articlesDiv.removeChild(articlesDiv.firstChild)
     }
+    deleteButtonId = 0
     sessionStorage.setItem('data', JSON.stringify(data))
     let articleData = JSON.parse(sessionStorage.getItem('data'))
     let articles = articleData.map(article => createArticles(article))
     articles.forEach(article => articlesDiv.appendChild(article))
     formCover.style.display = 'none'
+    console.log(JSON.parse(sessionStorage.getItem('data')))
   })
 
   Object.assign(close.style, {
@@ -304,11 +343,20 @@ const inputForm = (articleData, articles) => {
 let articleData = JSON.parse(sessionStorage.getItem('data'))
 let articles = articleData.map(article => createArticles(article))
 
-
 let articlesDiv = document.querySelector('.articles')
 window.onload = () => {
   articles.forEach(article => articlesDiv.appendChild(article))
 }
 
 let form = inputForm()
-document.body.appendChild(form)
+document.body.appendChild(form)  
+
+const reWrite = (newData) => {
+  let articlesDiv = document.querySelector('.articles')
+  deleteButtonId = 0
+  while(articlesDiv.hasChildNodes()) {
+    articlesDiv.removeChild(articlesDiv.firstChild)
+  }
+  let newArticles = newData.map(article => createArticles(article))
+  newArticles.forEach(article => articlesDiv.appendChild(article))
+}
