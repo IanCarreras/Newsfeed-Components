@@ -309,7 +309,9 @@ const inputForm = () => {
   submit.addEventListener('click', (event) => {
     let newArticleId = data.length
     event.preventDefault()
-    data.push({
+    let articleData = JSON.parse(sessionStorage.getItem('data'))
+    console.log(articleData)
+    articleData.push({
       'id': newArticleId++,
       'title': title.value,
       'date': date.value,
@@ -321,11 +323,9 @@ const inputForm = () => {
     }
     deleteButtonId = 0
     sessionStorage.setItem('data', JSON.stringify(data))
-    let articleData = JSON.parse(sessionStorage.getItem('data'))
     let articles = articleData.map(article => createArticles(article))
     articles.forEach(article => articlesDiv.appendChild(article))
     formCover.style.display = 'none'
-    console.log(JSON.parse(sessionStorage.getItem('data')))
   })
 
   Object.assign(close.style, {
