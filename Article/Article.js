@@ -320,7 +320,7 @@ const inputForm = () => {
       articlesDiv.removeChild(articlesDiv.firstChild)
     }
     deleteButtonId = 0
-    sessionStorage.setItem('data', JSON.stringify(data))
+    sessionStorage.setItem('data', JSON.stringify(articleData))
     let articles = articleData.map(article => createArticles(article))
     articles.forEach(article => articlesDiv.appendChild(article))
     formCover.style.display = 'none'
