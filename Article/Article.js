@@ -220,12 +220,11 @@ const createArticles = (obj) => {
   })
 
   deleteButton.addEventListener('click', (event) => {
-    console.log(event.target.id)
     let newData = JSON.parse(sessionStorage.getItem('data'))
     let position = event.target.id
     newData.splice(position, 1)
     sessionStorage.setItem('data', JSON.stringify(newData))
-    reWrite(newData)
+    reWrite()
   })
 
   articleDiv.appendChild(h2)
@@ -310,7 +309,6 @@ const inputForm = () => {
     let newArticleId = data.length
     event.preventDefault()
     let articleData = JSON.parse(sessionStorage.getItem('data'))
-    console.log(articleData)
     articleData.push({
       'id': newArticleId++,
       'title': title.value,
@@ -351,7 +349,8 @@ window.onload = () => {
 let form = inputForm()
 document.body.appendChild(form)  
 
-const reWrite = (newData) => {
+const reWrite = () => {
+  let newData = JSON.parse(sessionStorage.getItem('data'))
   let articlesDiv = document.querySelector('.articles')
   deleteButtonId = 0
   while(articlesDiv.hasChildNodes()) {
