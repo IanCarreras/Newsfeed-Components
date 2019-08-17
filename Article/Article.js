@@ -85,6 +85,34 @@ const data = [
     thirdParagraph: `Hodor hodor - hodor... Hodor hodor hodor hodor. Hodor. Hodor! Hodor hodor, hodor hodor hodor hodor hodor; hodor hodor? Hodor!
           Hodor hodor, HODOR hodor, hodor hodor?! Hodor! Hodor hodor, HODOR hodor, hodor hodor, hodor, hodor hodor. Hodor, hodor.
           Hodor. Hodor, hodor, hodor. Hodor hodor... Hodor hodor hodor?! Hodor, hodor... Hodor hodor HODOR hodor, hodor hodor. Hodor.`
+  },
+  {
+    title: 'Music',
+    date: 'August 15th, 2019',
+    firstParagraph: `Bulbasaur Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ivysaur Lorem ipsum dolor sit amet, consectetur adipiscing
+        elit. Venusaur Lorem ipsum dolor sit amet, consectetur adipiscing elit. Charmander Lorem ipsum dolor sit amet, consectetur
+        adipiscing elit. Charmeleon Lorem ipsum dolor sit amet, consectetur adipiscing elit. Charizard Lorem ipsum dolor sit amet,
+        consectetur adipiscing elit. Squirtle Lorem ipsum dolor sit amet, consectetur adipiscing elit. Wartortle Lorem ipsum dolor
+        sit amet, consectetur adipiscing elit. Blastoise Lorem ipsum dolor sit amet, consectetur adipiscing elit. Caterpie Lorem
+        ipsum dolor sit amet, consectetur adipiscing elit. Metapod Lorem ipsum dolor sit amet, consectetur adipiscing elit. Butterfree
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Weedle Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+        Kakuna Lorem ipsum dolor sit amet, consectetur adipiscing elit. Beedrill Lorem ipsum dolor sit amet, consectetur adipiscing
+        elit.`,
+
+    secondParagraph: `Pidgey Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pidgeotto Lorem ipsum dolor sit amet, consectetur adipiscing
+        elit. Pidgeot Lorem ipsum dolor sit amet, consectetur adipiscing elit. Rattata Lorem ipsum dolor sit amet, consectetur adipiscing
+        elit. Raticate Lorem ipsum dolor sit amet, consectetur adipiscing elit. Spearow Lorem ipsum dolor sit amet, consectetur adipiscing
+        elit. Fearow Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ekans Lorem ipsum dolor sit amet, consectetur adipiscing
+        elit. Arbok Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pikachu Lorem ipsum dolor sit amet, consectetur adipiscing
+        elit. Raichu Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sandshrew Lorem ipsum dolor sit amet, consectetur adipiscing
+        elit. Sandslash Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nidoran Lorem ipsum dolor sit amet, consectetur
+        adipiscing elit. Nidorina Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nidoqueen Lorem ipsum dolor sit amet,
+        consectetur adipiscing elit. Nidoran Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nidorino Lorem ipsum dolor
+        sit amet, consectetur adipiscing elit. Nidoking Lorem ipsum`,
+
+    thirdParagraph: `Gotta catch 'em all Horsea gym Ninjask Absol Sinnoh Poliwag. Gotta catch 'em all Youngster wants to fight Soda Pop Floatzel 
+        Leech Life Seismitoad Ariados. Earthquake Pokemon Glitch City Tail Whip Skitty Ekans Dialga. Ut aliquip ex ea commodo consequat James 
+        Castform Lotad the power that's inside Burnt Berry Makuhita. Ghost Ariados Corphish Dusclops Golbat Gligar Zweilous.`
   }
 ];
 
@@ -112,3 +140,222 @@ const data = [
   Step 5: Add a new article to the array. Make sure it is in the same format as the others. Refresh the page to see the new artible
 
 */
+let dataId = 0
+let deleteButtonId = 0
+
+data.forEach(article => Object.assign(article, {
+  id: dataId++
+}))
+sessionStorage.setItem('data', JSON.stringify(data))
+
+const createArticles = (obj) => {
+  let articleDiv = document.createElement('div')
+  articleDiv.classList.add('article')
+
+  let h2 = document.createElement('h2')
+  h2.innerText = obj.title  
+
+  let createPTags = (obj) => { 
+    let infoArray = [obj.date, obj.firstParagraph, obj.secondParagraph, obj.thirdParagraph]
+    let typeArray = ['date', 'paragraph', 'paragraph', 'paragraph']
+    let tags = [] 
+    infoArray.forEach((tagInfo, i) => {
+      let p = document.createElement('p')
+      p.classList.add(typeArray[i])
+      p.innerText = tagInfo
+      tags.push(p)
+    })
+    return tags
+  }
+  let pTags = createPTags(obj)
+  
+  let span = document.createElement('span')
+  span.classList.add('expandButton')
+  span.innerText = 'Read Article'
+  Object.assign(span.style, {
+    color: 'black',
+    height: '1rem'
+  })
+
+  span.addEventListener('click', (event) => {
+    if(Object.values(articleDiv.classList).indexOf('article-open') >= 0){
+      articleDiv.style.overflowY = 'hidden'
+      pTags.forEach(tag => tag.style.display = 'none')
+      pTags[0].style.display = ''
+      Object.assign(span.style, {
+        left: '50%',
+        top: '',
+      })
+      span.innerText = 'Read Article'
+      return articleDiv.classList.remove('article-open')
+    } else {
+      pTags.forEach(tag => {
+        tag.style.display = ''
+        if(tag.innerText === 'undefined') tag.style.display = 'none'
+      })
+      articleDiv.style.overflowY = 'auto'
+      Object.assign(span.style, {
+        left: '92%',
+        top: '5%'
+      })
+      span.innerText = 'X Close'
+
+      Object.assign(deleteButton.style, {
+      })
+      return articleDiv.classList.add('article-open')
+    }
+  })
+  
+  let deleteButton = document.createElement('span')
+  deleteButton.innerText = 'DELETE'
+  deleteButton.setAttribute('id', `${deleteButtonId}`)
+  deleteButton.classList.add('delete')
+  deleteButtonId++
+
+  Object.assign(deleteButton.style, {
+    color: 'red',
+    position: 'absolute',
+    left: '89%',
+    cursor: 'pointer'
+  })
+
+  deleteButton.addEventListener('click', (event) => {
+    let newData = JSON.parse(sessionStorage.getItem('data'))
+    let position = event.target.id
+    newData.splice(position, 1)
+    sessionStorage.setItem('data', JSON.stringify(newData))
+    reWrite()
+  })
+
+  articleDiv.appendChild(h2)
+  articleDiv.appendChild(deleteButton)
+  pTags.forEach(tag => articleDiv.appendChild(tag))
+  articleDiv.appendChild(span)
+
+  return articleDiv
+}
+
+
+const inputForm = () => {
+  let formCover = document.createElement('div')
+  let formDiv = document.createElement('form')
+  let title = document.createElement('input')
+  let date = document.createElement('input')
+  let text = document.createElement('textarea')
+  let submit = document.createElement('input')
+  let close = document.createElement('span')
+  let formElements = [close, title, date, text, submit]
+
+  submit.setAttribute('type', 'submit')
+  submit.setAttribute('value', 'submit')
+  
+  formElements.forEach(item => formDiv.appendChild(item))
+  formCover.appendChild(formDiv)
+  formCover.classList.add('form-cover')
+
+  Object.assign(formCover.style, {
+    display: 'none',
+    position: 'fixed',
+    top: '0',
+    background: 'rgba(0, 0, 0, 0.7)',
+    height: '100%',
+    width: '100%'
+  })
+
+  Object.assign(formDiv.style, {
+    display: 'flex',
+    flexDirection: 'column', 
+    backgroundColor: 'darkgray',
+    position: 'fixed',
+    top: '15%',
+    left: '8%',
+    width: '80%',
+    border: '2px solid black',
+    borderRadius: '1rem',
+    padding: '1.5rem',
+  })
+
+  Object.assign(title.style, {
+    height: '2rem',
+    borderRadius: '1rem 1rem 0 0',
+    border: '1px solid black',
+
+  })
+  title.setAttribute('placeholder', 'title')
+  title.classList.add('title-input')
+
+  Object.assign(date.style, {
+    height: '2rem',
+    border: '1px solid black',
+  })
+  date.setAttribute('placeholder', 'date')
+  date.classList.add('date-input')
+
+  Object.assign(text.style, {
+    height: '20rem',
+    borderRadius: '0 0 1rem 1rem',
+    border: '1px solid black',
+  })
+  text.setAttribute('placeholder', 'write......')
+  text.classList.add('text-input')
+
+  Object.assign(submit.style, {
+    width: '20%',
+    margin: '.5rem 0 0 1rem',
+    cursor: 'pointer'
+  })
+
+  submit.addEventListener('click', (event) => {
+    let newArticleId = data.length
+    event.preventDefault()
+    let articleData = JSON.parse(sessionStorage.getItem('data'))
+    articleData.push({
+      'id': newArticleId++,
+      'title': title.value,
+      'date': date.value,
+      'firstParagraph': text.value,
+    })
+
+    while(articlesDiv.hasChildNodes()) {
+      articlesDiv.removeChild(articlesDiv.firstChild)
+    }
+    deleteButtonId = 0
+    sessionStorage.setItem('data', JSON.stringify(articleData))
+    let articles = articleData.map(article => createArticles(article))
+    articles.forEach(article => articlesDiv.appendChild(article))
+    formCover.style.display = 'none'
+  })
+
+  Object.assign(close.style, {
+    cursor: 'pointer',
+    marginLeft: '90%',
+    marginBottom: '1rem'
+  })
+  close.innerText = 'X Close'
+  close.addEventListener('click', (event) => {
+    return formCover.style.display = 'none'
+  })
+  return formCover
+}
+
+let articleData = JSON.parse(sessionStorage.getItem('data'))
+let articles = articleData.map(article => createArticles(article))
+
+let articlesDiv = document.querySelector('.articles')
+window.onload = () => {
+  articles.forEach(article => articlesDiv.appendChild(article))
+}
+
+let form = inputForm()
+document.body.appendChild(form)  
+
+const reWrite = () => {
+  let newData = JSON.parse(sessionStorage.getItem('data'))
+  let articlesDiv = document.querySelector('.articles')
+  deleteButtonId = 0
+  while(articlesDiv.hasChildNodes()) {
+    articlesDiv.removeChild(articlesDiv.firstChild)
+  }
+  let newArticles = newData.map(article => createArticles(article))
+  newArticles.forEach(article => articlesDiv.appendChild(article))
+}
